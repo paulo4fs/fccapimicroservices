@@ -8,7 +8,6 @@ const Exercise = require('./models/exerciseModel');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const { findById } = require('./models/exerciseModel');
 
 dotenv.config({ path: './.env' });
 
@@ -86,7 +85,7 @@ app.get('/api/exercise/log?:userId?:from?:to?:limit', async function (
 
   let user = await User.findById(userId);
   if (!user) {
-    next('user not found');
+    return 'user not found';
   }
   let exercise = user.exercise.map((el) => {
     return (el = {
@@ -129,6 +128,8 @@ app.post('/api/exercise/add', async function (req, res) {
 
   if (!newExercise.date) {
     newExercise.date = new Date();
+  } else {
+    newExercise.date = new Date(newExercise.date);
   }
   //create new exercise
 
@@ -149,11 +150,11 @@ app.post('/api/exercise/add', async function (req, res) {
   );
 
   res.status(200).json({
-    userid: originalExercise.userId,
+    _id: user._id,
     description: originalExercise.description,
     duration: originalExercise.duration,
-    date: originalExercise.date,
-    username: user.username,
+    date: originalExercise.date.toDateString(),
+    username: user.username
   });
 });
 
