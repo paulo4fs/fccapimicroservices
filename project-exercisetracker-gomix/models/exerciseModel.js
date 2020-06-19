@@ -12,6 +12,7 @@ const exerciseSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  username: String,
 });
 
 const Exercise = mongoose.model('Exercise', exerciseSchema);
